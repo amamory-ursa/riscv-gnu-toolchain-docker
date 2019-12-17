@@ -8,10 +8,11 @@ RUN apt-get update
 RUN apt-get install -y autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev gawk build-essential \
   bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
 RUN apt-get install -y git
-RUN git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
+RUN git clone https://github.com/riscv/riscv-gnu-toolchain
 WORKDIR $RISCV/riscv-gnu-toolchain
-RUN ./configure --prefix=/opt/riscv --with-arch=rv32gc --with-abi=ilp32d --enable-multilib
-RUN make
+RUN git submodule update --init --recursive
+RUN ./configure --prefix=/opt/riscv --with-arch=rv32im --with-abi=ilp32 --enable-multilib
+RUN make -j4
 
 RUN apt-get update && apt-get install -y gosu
 WORKDIR /usr/local/bin
